@@ -1,4 +1,3 @@
-// filepath: /C:/Users/mikol/Desktop/informatyka_2021/sem7/abstrakcyjne/cpp_numpy/numpy_for_cpp/.github/workflows/ci.yml
 name: CI
 
 on:
