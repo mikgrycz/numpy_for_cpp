@@ -10,7 +10,7 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.c
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Add source files
-add_executable(test_matrix tests/test_matrix.cpp)
+add_executable(test_matrix tests/test_matrix.cpp src/matrix.tpp)
 
 # Link Google Test
 find_package(GTest REQUIRED)
