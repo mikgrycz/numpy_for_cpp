@@ -1,27 +1,37 @@
-#include <gtest/gtest.h>
+#include <cassert>
+#include <iostream>
 #include "../include/matrix.hpp"
 
-TEST(MatrixTest, AdditionWorks) {
+void test_addition() {
     Matrix<int> mat1{{1, 2}, {3, 4}};
     Matrix<int> mat2{{5, 6}, {7, 8}};
     Matrix<int> result = mat1 + mat2;
 
-    EXPECT_EQ(result(0, 0), 6);
-    EXPECT_EQ(result(1, 1), 12);
+    assert(result(0, 0) == 6);
+    assert(result(0, 1) == 8);
+    assert(result(1, 0) == 10);
+    assert(result(1, 1) == 12);
+
+    std::cout << "test_addition passed!" << std::endl;
 }
 
-TEST(MatrixTest, MultiplicationWorks) {
+void test_multiplication() {
     Matrix<int> mat1{{1, 2}, {3, 4}};
     Matrix<int> mat2{{2, 0}, {1, 2}};
     Matrix<int> result = mat1 * mat2;
 
-    EXPECT_EQ(result(0, 0), 4);
-    EXPECT_EQ(result(0, 1), 4);
-    EXPECT_EQ(result(1, 0), 10);
-    EXPECT_EQ(result(1, 1), 8);
+    assert(result(0, 0) == 4);
+    assert(result(0, 1) == 4);
+    assert(result(1, 0) == 10);
+    assert(result(1, 1) == 8);
+
+    std::cout << "test_multiplication passed!" << std::endl;
 }
 
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+int main() {
+    test_addition();
+    test_multiplication();
+
+    std::cout << "All tests passed!" << std::endl;
+    return 0;
 }

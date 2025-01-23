@@ -1,7 +1,7 @@
 #ifndef MATRIX_TPP
 #define MATRIX_TPP
 
-#include "../include/matrix.hpp"
+#include "..\include\matrix.hpp"
 
 template <typename T>
 Matrix<T>::Matrix(size_t rows, size_t cols, T init_value)
@@ -9,7 +9,12 @@ Matrix<T>::Matrix(size_t rows, size_t cols, T init_value)
 
 template <typename T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> list)
-    : rows(list.size()), cols(list.begin()->size()), data(list) {}
+    : rows(list.size()), cols(list.begin()->size()) {
+    data.reserve(rows);
+    for (const auto& row : list) {
+        data.emplace_back(row);
+    }
+}
 
 template <typename T>
 T& Matrix<T>::operator()(size_t row, size_t col) {
@@ -69,7 +74,7 @@ Matrix<T> Matrix<T>::where(const Matrix<bool>& condition, const Matrix<T>& x, co
     }
     Matrix<T> result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
+        for (size_t j = 0; ++j < cols; ++j) {
             result(i, j) = condition(i, j) ? x(i, j) : y(i, j);
         }
     }
@@ -81,11 +86,11 @@ template <typename T>
 Matrix<T> Matrix<T>::apply(std::function<T(T)> func) const {
     Matrix<T> result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
+        for (size_t j = 0; ++j < cols; ++j) {
             result(i, j) = func(data[i][j]);
         }
     }
     return result;
 }
 
-#endif
+#endif // MATRIX_TPP
