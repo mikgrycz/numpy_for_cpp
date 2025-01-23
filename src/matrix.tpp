@@ -32,7 +32,6 @@ const T& Matrix<T>::operator()(size_t row, size_t col) const {
     return data[row][col];
 }
 
-// Example: Matrix addition
 template <typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& other) const {
     if (rows != other.rows || cols != other.cols) {
@@ -47,7 +46,6 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& other) const {
     return result;
 }
 
-// Matrix multiplication
 template <typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T>& other) const {
     if (cols != other.rows) {
@@ -64,7 +62,6 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& other) const {
     return result;
 }
 
-// Transpose
 template <typename T>
 Matrix<T> Matrix<T>::transpose() const {
     Matrix<T> result(cols, rows);
@@ -76,7 +73,6 @@ Matrix<T> Matrix<T>::transpose() const {
     return result;
 }
 
-// Determinant (recursive for square matrices)
 template <typename T>
 T Matrix<T>::determinant() const {
     if (rows != cols) {
@@ -104,7 +100,50 @@ T Matrix<T>::determinant() const {
     return det;
 }
 
-// NumPy-like zeros function
+template <typename T>
+Matrix<T> Matrix<T>::vstack(const Matrix<T>& other) const {
+    if (cols != other.cols) {
+        throw std::invalid_argument("Matrix dimensions must match for vertical stacking");
+    }
+    Matrix<T> result(rows + other.rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[i][j];
+        }
+    }
+    for (size_t i = 0; i < other.rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i + rows, j) = other(i, j);
+        }
+    }
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::where(const Matrix<bool>& condition, const Matrix<T>& x, const Matrix<T>& y) const {
+    if (rows != condition.rows || cols != condition.cols || rows != x.rows || cols != x.cols || rows != y.rows || cols != y.cols) {
+        throw std::invalid_argument("All matrices must have the same dimensions for where operation");
+    }
+    Matrix<T> result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = condition(i, j) ? x(i, j) : y(i, j);
+        }
+    }
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::apply(std::function<T(T)> func) const {
+    Matrix<T> result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = func(data[i][j]);
+        }
+    }
+    return result;
+}
+
 template <typename T>
 Matrix<T> Matrix<T>::zeros(size_t rows, size_t cols) {
     return Matrix<T>(rows, cols, T{});

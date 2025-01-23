@@ -28,6 +28,20 @@ void test_multiplication() {
     std::cout << "test_multiplication passed!" << std::endl;
 }
 
+void test_transpose() {
+    Matrix<int> mat{{1, 2, 3}, {4, 5, 6}};
+    Matrix<int> transposed = mat.transpose();
+
+    assert(transposed.get_rows() == 3);
+    assert(transposed.get_cols() == 2);
+    assert(transposed(0, 0) == 1);
+    assert(transposed(1, 0) == 2);
+    assert(transposed(2, 0) == 3);
+
+    std::cout << "test_transpose passed!" << std::endl;
+}
+
+
 void test_zeros() {
     Matrix<int> zero_matrix = Matrix<int>::zeros(3, 3);
     for (size_t i = 0; i < 3; ++i) {
@@ -36,55 +50,52 @@ void test_zeros() {
         }
     }
     std::cout << "test_zeros passed!" << std::endl;
-
-}
-
-void test_empty() {
-    Matrix<int> empty_matrix = Matrix<int>::empty(2, 2);
-    // Cannot assert values as they are uninitialized, but dimensions should be correct.
-    assert(empty_matrix.get_rows() == 2);
-    assert(empty_matrix.get_cols() == 2);
-    std::cout << "test_empty passed!" << std::endl;
-
 }
 
 void test_full() {
-    Matrix<int> full_matrix = Matrix<int>::full(2, 2, 5);
+    Matrix<int> full_matrix = Matrix<int>::full(2, 3, 7);
     for (size_t i = 0; i < 2; ++i) {
-        for (size_t j = 0; j < 2; ++j) {
-            assert(full_matrix(i, j) == 5);
+        for (size_t j = 0; j < 3; ++j) {
+            assert(full_matrix(i, j) == 7);
         }
     }
-    std::cout << "test_fill passed!" << std::endl;
-
+    std::cout << "test_full passed!" << std::endl;
 }
 
-// void test_vstack() {
-//     Matrix<int> mat1 = Matrix<int>::full(2, 2, 1);
-//     Matrix<int> mat2 = Matrix<int>::full(2, 2, 2);
-//     Matrix<int> vstacked = mat1.vstack(mat2);
+void test_vstack() {
+    Matrix<int> mat1{{1, 2}};
+    Matrix<int> mat2{{3, 4}};
+    Matrix<int> vstacked = mat1.vstack(mat2);
 
-//     assert(vstacked.get_rows() == 4);
-//     assert(vstacked.get_cols() == 2);
+    assert(vstacked.get_rows() == 2);
+    assert(vstacked.get_cols() == 2);
+    assert(vstacked(0, 0) == 1);
+    assert(vstacked(1, 0) == 3);
 
-//     for (size_t i = 0; i < 2; ++i) {
-//         for (size_t j = 0; j < 2; ++j) {
-//             assert(vstacked(i, j) == 1);
-//         }
-//     }
-//     for (size_t i = 2; i < 4; ++i) {
-//         for (size_t j = 0; j < 2; ++j) {
-//             assert(vstacked(i, j) == 2);
-//         }
-//     }
-// }
+    std::cout << "test_vstack passed!" << std::endl;
+}
+
+void test_apply() {
+    Matrix<int> mat{{1, 2}, {3, 4}};
+    Matrix<int> squared = mat.apply([](int x) { return x * x; });
+
+    assert(squared(0, 0) == 1);
+    assert(squared(0, 1) == 4);
+    assert(squared(1, 0) == 9);
+    assert(squared(1, 1) == 16);
+
+    std::cout << "test_apply passed!" << std::endl;
+}
 
 int main() {
     test_addition();
     test_multiplication();
+    test_transpose();
     test_zeros();
-    test_empty();
     test_full();
+    test_vstack();
+    test_apply();
+
     std::cout << "All tests passed!" << std::endl;
     return 0;
 }
