@@ -45,6 +45,11 @@ public:
 
     size_t get_rows() const { return rows; }
     size_t get_cols() const { return cols; }
+
+    static Matrix<T> zeros(size_t rows, size_t cols);
+    static Matrix<T> empty(size_t rows, size_t cols);
+    static Matrix<T> full(size_t rows, size_t cols, T value);
+    Matrix<T> vstack(const Matrix<T>& other) const;
 };
 
 #include "../src/matrix.tpp"

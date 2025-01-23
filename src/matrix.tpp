@@ -64,33 +64,60 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& other) const {
     return result;
 }
 
-// NumPy-like where function
+// Transpose
 template <typename T>
-Matrix<T> Matrix<T>::where(const Matrix<bool>& condition, const Matrix<T>& x, const Matrix<T>& y) const {
-    if (condition.get_rows() != rows || condition.get_cols() != cols ||
-        x.get_rows() != rows || x.get_cols() != cols ||
-        y.get_rows() != rows || y.get_cols() != cols) {
-        throw std::invalid_argument("All matrices must have the same dimensions for where function");
-    }
-    Matrix<T> result(rows, cols);
+Matrix<T> Matrix<T>::transpose() const {
+    Matrix<T> result(cols, rows);
     for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; ++j < cols; ++j) {
-            result(i, j) = condition(i, j) ? x(i, j) : y(i, j);
+        for (size_t j = 0; j < cols; ++j) {
+            result(j, i) = data[i][j];
         }
     }
     return result;
 }
 
-// Apply a function element-wise
+// Determinant (recursive for square matrices)
 template <typename T>
-Matrix<T> Matrix<T>::apply(std::function<T(T)> func) const {
-    Matrix<T> result(rows, cols);
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; ++j < cols; ++j) {
-            result(i, j) = func(data[i][j]);
-        }
+T Matrix<T>::determinant() const {
+    if (rows != cols) {
+        throw std::invalid_argument("Determinant can only be computed for square matrices");
     }
-    return result;
+    if (rows == 1) {
+        return data[0][0];
+    }
+    if (rows == 2) {
+        return data[0][0] * data[1][1] - data[0][1] * data[1][0];
+    }
+    T det = 0;
+    for (size_t p = 0; p < cols; ++p) {
+        Matrix<T> submatrix(rows - 1, cols - 1);
+        for (size_t i = 1; i < rows; ++i) {
+            size_t col_index = 0;
+            for (size_t j = 0; j < cols; ++j) {
+                if (j == p) continue;
+                submatrix(i - 1, col_index) = data[i][j];
+                ++col_index;
+            }
+        }
+        det += (p % 2 == 0 ? 1 : -1) * data[0][p] * submatrix.determinant();
+    }
+    return det;
+}
+
+// NumPy-like zeros function
+template <typename T>
+Matrix<T> Matrix<T>::zeros(size_t rows, size_t cols) {
+    return Matrix<T>(rows, cols, T{});
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::empty(size_t rows, size_t cols) {
+    return Matrix<T>(rows, cols);
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::full(size_t rows, size_t cols, T value) {
+    return Matrix<T>(rows, cols, value);
 }
 
 #endif // MATRIX_TPP
