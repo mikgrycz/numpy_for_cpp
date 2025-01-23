@@ -1,0 +1,38 @@
+// filepath: /C:/Users/mikol/Desktop/informatyka_2021/sem7/abstrakcyjne/cpp_numpy/numpy_for_cpp/.github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up C++
+        uses: actions/setup-cpp@v2
+        with:
+          compiler: g++-21
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake
+
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh
+          ./vcpkg/vcpkg install gtest
+
+      - name: Build and test
+        run: |
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake --build build
+          ./build/tests/test_matrix
