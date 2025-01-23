@@ -1,7 +1,7 @@
 #ifndef MATRIX_TPP
 #define MATRIX_TPP
 
-#include "matrix.hpp"
+#include "../include/matrix.hpp"
 
 template <typename T>
 Matrix<T>::Matrix(size_t rows, size_t cols, T init_value)
