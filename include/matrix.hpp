@@ -47,5 +47,5 @@ public:
     size_t get_cols() const { return cols; }
 };
 
-#include "matrix.hpp"
+#include "../src/matrix.tpp"
 #endif
