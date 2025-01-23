@@ -1,7 +1,7 @@
 #ifndef MATRIX_TPP
 #define MATRIX_TPP
 
-#include "../include/matrix.hpp"
+#include "matrix.hpp"
 
 template <typename T>
 Matrix<T>::Matrix(size_t rows, size_t cols, T init_value)
@@ -9,7 +9,12 @@ Matrix<T>::Matrix(size_t rows, size_t cols, T init_value)
 
 template <typename T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> list)
-    : rows(list.size()), cols(list.begin()->size()), data(list) {}
+    : rows(list.size()), cols(list.begin()->size()) {
+    data.reserve(rows);
+    for (const auto& row : list) {
+        data.emplace_back(row);
+    }
+}
 
 template <typename T>
 T& Matrix<T>::operator()(size_t row, size_t col) {
@@ -88,4 +93,4 @@ Matrix<T> Matrix<T>::apply(std::function<T(T)> func) const {
     return result;
 }
 
-#endif
+#endif // MATRIX_TPP
